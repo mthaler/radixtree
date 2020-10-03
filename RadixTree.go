@@ -104,7 +104,7 @@ func (r *RadixTree) PrintStructure() {
 
 func printStructure(x *node) {
 	if x.value != nil {
-		fmt.Printf("value %v", x.value)
+		fmt.Printf("value: %v", x.value)
 	}
 	for c := 0; c < R; c++ {
 		if x.next[c] != nil {
