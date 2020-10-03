@@ -1,6 +1,9 @@
 package radixtree
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 type node struct {
 	value interface{}
@@ -117,13 +120,17 @@ func printStructure(x *node, d int) {
 	l := len(runes)
 	if l == 1 {
 		fmt.Printf("%c", runes[0])
-		printStructure(children[0], d + 2)
+		printStructure(children[0], d + 1)
 	} else if l > 1 {
 		fmt.Println()
 		for i, r := range runes {
-			fmt.Printf("%c", r)
+			fmt.Printf("%s%c", ws(d), r)
 			child := children[i]
-			printStructure(child, d + 2)
+			printStructure(child, d + 1)
 		}
 	}
+}
+
+func ws(count int) string {
+	return strings.Repeat(" ", count)
 }
