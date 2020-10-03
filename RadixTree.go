@@ -1,5 +1,7 @@
 package radixtree
 
+import "fmt"
+
 type node struct {
 	value interface{}
 	next []*node
@@ -92,6 +94,21 @@ func (r *RadixTree) delete(x *node, key string, d int) *node {
 		if x.next[c] != nil {
 			return x
 		}
-		return nil
+	}
+	return nil
+}
+
+func (r *RadixTree) PrintStructure() {
+	printStructure(r.root)
+}
+
+func printStructure(x *node) {
+	if x.value != nil {
+		fmt.Printf("value %v", x.value)
+	}
+	for c := 0; c < R; c++ {
+		if x.next[c] != nil {
+			printStructure(x.next[c])
+		}
 	}
 }
