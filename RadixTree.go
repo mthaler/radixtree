@@ -102,13 +102,12 @@ func (r *RadixTree) delete(x *node, key string, d int) *node {
 }
 
 func (r *RadixTree) PrintStructure() {
-	printStructure(r.root, 0)
+	var b strings.Builder
+	printStructure(r.root, 0, &b)
+	fmt.Println(b.String())
 }
 
-func printStructure(x *node, d int) {
-	if x.value != nil {
-		fmt.Printf("value: %v", x.value)
-	}
+func printStructure(x *node, d int, b *strings.Builder) {
 	runes := make([]rune, 0)
 	children := make([]*node, 0)
 	for c := 0; c < R; c++ {
@@ -119,14 +118,15 @@ func printStructure(x *node, d int) {
 	}
 	l := len(runes)
 	if l == 1 {
-		fmt.Printf("%c", runes[0])
-		printStructure(children[0], d + 1)
+		b.WriteRune(runes[0])
+		printStructure(children[0], d + 1, b)
 	} else if l > 1 {
-		fmt.Println()
 		for i, r := range runes {
-			fmt.Printf("%s%c", ws(d), r)
+			b.WriteString("\n")
+			b.WriteString(ws(d))
+			b.WriteRune(r)
 			child := children[i]
-			printStructure(child, d + 1)
+			printStructure(child, d + 1, b)
 		}
 	}
 }
