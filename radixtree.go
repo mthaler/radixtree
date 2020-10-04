@@ -128,6 +128,40 @@ func (r *RadixTree) collect(x* node, prefix []rune, results []string) []string {
 	return results
 }
 
+func (r *RadixTree) KeysThatMatch(pattern string) []string {
+	results := make([]string, 0)
+
+	b := make([]rune, 0)
+	results = r.collectPattern(r.root, b, []rune(pattern), results)
+	return results
+}
+
+func (r *RadixTree) collectPattern(x *node, prefix []rune, pattern []rune, results []string) []string{
+	if x == nil {
+		return results
+	}
+	d := len(prefix)
+	if d == len(pattern) && x.value != nil {
+		results = enqueue(results, makeString(prefix))
+	}
+	if d == len(pattern) {
+		return results
+	}
+	c := pattern[d]
+	if c == '.' {
+		for ch := 0; ch < R; ch++ {
+			prefix = append(prefix, rune(ch))
+			results = r.collectPattern(x.next[ch], prefix, pattern, results)
+			prefix = deleteCharAt(prefix, len(prefix) - 1)
+		}
+	} else {
+		prefix = append(prefix, rune(c))
+		results = r.collectPattern(x.next[c], prefix, pattern, results)
+		prefix = deleteCharAt(prefix, len(prefix) - 1)
+	}
+	return results
+}
+
 func (r *RadixTree) PrintStructure() {
 	var b strings.Builder
 	printStructure(r.root, 0, &b)

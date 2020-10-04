@@ -26,6 +26,14 @@ func TestRadixTree_KeysWithPrefix(t *testing.T) {
 	}
 }
 
+func TestRadixTree_KeysThatMatch(t *testing.T) {
+	r := createTestTree()
+	expected := []string { "romanus", "romulus" }
+	if !reflect.DeepEqual(r.KeysThatMatch("rom...s"), expected) {
+		t.Errorf("r.Keys should be %v", expected)
+	}
+}
+
 func createTestTree() RadixTree {
 	r := RadixTree{}
 	r.Put("romane", 1)
@@ -37,3 +45,4 @@ func createTestTree() RadixTree {
 	r.Put("rubicundus", 7)
 	return r
 }
+
