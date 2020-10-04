@@ -101,6 +101,33 @@ func (r *RadixTree) delete(x *node, key string, d int) *node {
 	return nil
 }
 
+func (r *RadixTree) Keys() []string {
+	return r.KeysWithPrefix("")
+}
+
+func (r *RadixTree) KeysWithPrefix(prefix string) []string {
+	results := make([]string, 0)
+	x := r.get(r.root, prefix, 0)
+	b := []rune(prefix)
+	results = r.collect(x, b, results)
+	return results
+}
+
+func (r *RadixTree) collect(x* node, prefix []rune, results []string) []string {
+	if x == nil {
+		return results
+	}
+	if x.value != nil {
+		results = enqueue(results, makeString(prefix))
+	}
+	for c := 0; c < R; c++ {
+		prefix = append(prefix, rune(c))
+		results = r.collect(x.next[c], prefix, results)
+		prefix = deleteCharAt(prefix, len(prefix) - 1)
+	}
+	return results
+}
+
 func (r *RadixTree) PrintStructure() {
 	var b strings.Builder
 	printStructure(r.root, 0, &b)
