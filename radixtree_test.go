@@ -12,7 +12,7 @@ func TestRadixTree_PrintStructure(t *testing.T) {
 
 func TestRadixTree_Keys(t *testing.T) {
 	r := createTestTree()
-	expected := []string {"romane", "romanus", "romulus", "rubens", "ruber", "rubicon", "rubicundus"}
+	expected := []string{"romane", "romanus", "romulus", "rubens", "ruber", "rubicon", "rubicundus"}
 	if !reflect.DeepEqual(r.Keys(), expected) {
 		t.Errorf("r.Keys should be %v", expected)
 	}
@@ -20,7 +20,7 @@ func TestRadixTree_Keys(t *testing.T) {
 
 func TestRadixTree_KeysWithPrefix(t *testing.T) {
 	r := createTestTree()
-	expected := []string {"romane", "romanus", "romulus", }
+	expected := []string{"romane", "romanus", "romulus"}
 	if !reflect.DeepEqual(r.KeysWithPrefix("rom"), expected) {
 		t.Errorf("r.Keys should be %v", expected)
 	}
@@ -28,7 +28,7 @@ func TestRadixTree_KeysWithPrefix(t *testing.T) {
 
 func TestRadixTree_KeysThatMatch(t *testing.T) {
 	r := createTestTree()
-	expected := []string { "romanus", "romulus" }
+	expected := []string{"romanus", "romulus"}
 	if !reflect.DeepEqual(r.KeysThatMatch("rom...s"), expected) {
 		t.Errorf("r.Keys should be %v", expected)
 	}

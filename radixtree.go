@@ -11,24 +11,27 @@ type node struct {
 	next  []*node     // array of pointers to the next node
 }
 
-const R = 256
+const R = 256 // extended ASCII
 
-// creates a new node structure, initializing the next array
+// Creates a new node structure, initializing the next array
 func createNode() *node {
 	n := node{next: make([]*node, R)}
 	return &n
 }
 
 type RadixTree struct {
-	root *node
-	n    int
+	root *node // root of trie
+	n    int // number of keys in trie
+
 }
 
+// Returns the value associated with the given key if the radix tree contains the key or nil.
 func (r *RadixTree) Get(key string) interface{} {
 	x := get(r.root, key, 0)
 	return x
 }
 
+// Returns a boolean indicating if the radix tree contains the given key.
 func (r *RadixTree) Contains(key string) bool {
 	return r.Get(key) != nil
 }
@@ -41,6 +44,7 @@ func get(x *node, key string, d int) *node {
 	return get(x.next[c], key, d+1)
 }
 
+// Adds the given key and value to the radix tree, overwriting the old value with the new value if the radix tree already contains the key.
 func (r *RadixTree) Put(key string, value interface{}) {
 	if value == nil {
 		r.Delete(key)
@@ -64,10 +68,12 @@ func (r *RadixTree) put(x *node, key string, value interface{}, d int) *node {
 	return x
 }
 
+// Returns the number of key-value pairs of the radix tree.
 func (r *RadixTree) Size() int {
 	return r.n
 }
 
+// Returns a boolean indicating if the radix tree is empty
 func (r *RadixTree) IsEmpty() bool {
 	return r.Size() == 0
 }
@@ -102,6 +108,7 @@ func (r *RadixTree) delete(x *node, key string, d int) *node {
 	return nil
 }
 
+// Returns all keys of the radix tree.
 func (r *RadixTree) Keys() []string {
 	return r.KeysWithPrefix("")
 }
