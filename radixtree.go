@@ -8,7 +8,7 @@ import (
 
 type node struct {
 	value interface{} // value of the node or nil if there is no value
-	next []*node // array of pointers to the next node
+	next  []*node     // array of pointers to the next node
 }
 
 const R = 256
@@ -21,7 +21,7 @@ func createNode() *node {
 
 type RadixTree struct {
 	root *node
-	n int
+	n    int
 }
 
 func (r *RadixTree) Get(key string) interface{} {
@@ -38,7 +38,7 @@ func get(x *node, key string, d int) *node {
 		return x
 	}
 	c := key[d]
-	return get(x.next[c], key, d + 1)
+	return get(x.next[c], key, d+1)
 }
 
 func (r *RadixTree) Put(key string, value interface{}) {
@@ -49,10 +49,10 @@ func (r *RadixTree) Put(key string, value interface{}) {
 }
 
 func (r *RadixTree) put(x *node, key string, value interface{}, d int) *node {
-	if (x == nil) {
+	if x == nil {
 		x = createNode()
 	}
-	if d == len(key)  {
+	if d == len(key) {
 		if x.value == nil {
 			r.n++
 		}
@@ -60,7 +60,7 @@ func (r *RadixTree) put(x *node, key string, value interface{}, d int) *node {
 		return x
 	}
 	c := key[d]
-	x.next[c] = r.put(x.next[c], key, value, d + 1)
+	x.next[c] = r.put(x.next[c], key, value, d+1)
 	return x
 }
 
@@ -87,7 +87,7 @@ func (r *RadixTree) delete(x *node, key string, d int) *node {
 		x.value = nil
 	} else {
 		c := key[d]
-		x.next[c] = r.delete(x.next[c], key, d - 1)
+		x.next[c] = r.delete(x.next[c], key, d-1)
 	}
 
 	// remove subtrie rooted at x if it is completely empty
@@ -114,7 +114,7 @@ func (r *RadixTree) KeysWithPrefix(prefix string) []string {
 	return results
 }
 
-func collect(x* node, prefix []rune, results []string) []string {
+func collect(x *node, prefix []rune, results []string) []string {
 	if x == nil {
 		return results
 	}
@@ -124,7 +124,7 @@ func collect(x* node, prefix []rune, results []string) []string {
 	for c := 0; c < R; c++ {
 		prefix = append(prefix, rune(c))
 		results = collect(x.next[c], prefix, results)
-		prefix = deleteCharAt(prefix, len(prefix) - 1)
+		prefix = deleteCharAt(prefix, len(prefix)-1)
 	}
 	return results
 }
@@ -137,7 +137,7 @@ func (r *RadixTree) KeysThatMatch(pattern string) []string {
 	return results
 }
 
-func collectPattern(x *node, prefix []rune, pattern []rune, results []string) []string{
+func collectPattern(x *node, prefix []rune, pattern []rune, results []string) []string {
 	if x == nil {
 		return results
 	}
@@ -153,17 +153,17 @@ func collectPattern(x *node, prefix []rune, pattern []rune, results []string) []
 		for ch := 0; ch < R; ch++ {
 			prefix = append(prefix, rune(ch))
 			results = collectPattern(x.next[ch], prefix, pattern, results)
-			prefix = deleteCharAt(prefix, len(prefix) - 1)
+			prefix = deleteCharAt(prefix, len(prefix)-1)
 		}
 	} else {
 		prefix = append(prefix, rune(c))
 		results = collectPattern(x.next[c], prefix, pattern, results)
-		prefix = deleteCharAt(prefix, len(prefix) - 1)
+		prefix = deleteCharAt(prefix, len(prefix)-1)
 	}
 	return results
 }
 
-func(r *RadixTree) LongestPrefixOf(query string) string {
+func (r *RadixTree) LongestPrefixOf(query string) string {
 	q := []rune(query)
 	length := longestPrefixOf(r.root, q, 0, -1)
 	if length == -1 {
@@ -184,7 +184,7 @@ func longestPrefixOf(x *node, query []rune, d int, length int) int {
 		return length
 	}
 	c := query[d]
-	return longestPrefixOf(x.next[c], query, d + 1, length)
+	return longestPrefixOf(x.next[c], query, d+1, length)
 }
 
 func (r *RadixTree) PrintStructure() {
@@ -205,14 +205,14 @@ func printStructure(x *node, d int, b *strings.Builder) {
 	l := len(runes)
 	if l == 1 {
 		b.WriteRune(runes[0])
-		printStructure(children[0], d + 1, b)
+		printStructure(children[0], d+1, b)
 	} else if l > 1 {
 		for i, r := range runes {
 			b.WriteString("\n")
 			b.WriteString(ws(d))
 			b.WriteRune(r)
 			child := children[i]
-			printStructure(child, d + 1, b)
+			printStructure(child, d+1, b)
 		}
 	}
 }
