@@ -109,11 +109,11 @@ func (r *RadixTree) KeysWithPrefix(prefix string) []string {
 	results := make([]string, 0)
 	x := r.get(r.root, prefix, 0)
 	b := []rune(prefix)
-	results = r.collect(x, b, results)
+	results = collect(x, b, results)
 	return results
 }
 
-func (r *RadixTree) collect(x* node, prefix []rune, results []string) []string {
+func collect(x* node, prefix []rune, results []string) []string {
 	if x == nil {
 		return results
 	}
@@ -122,7 +122,7 @@ func (r *RadixTree) collect(x* node, prefix []rune, results []string) []string {
 	}
 	for c := 0; c < R; c++ {
 		prefix = append(prefix, rune(c))
-		results = r.collect(x.next[c], prefix, results)
+		results = collect(x.next[c], prefix, results)
 		prefix = deleteCharAt(prefix, len(prefix) - 1)
 	}
 	return results
@@ -132,11 +132,11 @@ func (r *RadixTree) KeysThatMatch(pattern string) []string {
 	results := make([]string, 0)
 
 	b := make([]rune, 0)
-	results = r.collectPattern(r.root, b, []rune(pattern), results)
+	results = collectPattern(r.root, b, []rune(pattern), results)
 	return results
 }
 
-func (r *RadixTree) collectPattern(x *node, prefix []rune, pattern []rune, results []string) []string{
+func collectPattern(x *node, prefix []rune, pattern []rune, results []string) []string{
 	if x == nil {
 		return results
 	}
@@ -151,15 +151,38 @@ func (r *RadixTree) collectPattern(x *node, prefix []rune, pattern []rune, resul
 	if c == '.' {
 		for ch := 0; ch < R; ch++ {
 			prefix = append(prefix, rune(ch))
-			results = r.collectPattern(x.next[ch], prefix, pattern, results)
+			results = collectPattern(x.next[ch], prefix, pattern, results)
 			prefix = deleteCharAt(prefix, len(prefix) - 1)
 		}
 	} else {
 		prefix = append(prefix, rune(c))
-		results = r.collectPattern(x.next[c], prefix, pattern, results)
+		results = collectPattern(x.next[c], prefix, pattern, results)
 		prefix = deleteCharAt(prefix, len(prefix) - 1)
 	}
 	return results
+}
+
+func(r *RadixTree) LongestPrefixOf(query string) string {
+	length := longestPrefixOf(r.root, []rune(query), 0, -1)
+	if length == -1 {
+		return ""
+	} else {
+		return "?"
+	}
+}
+
+func longestPrefixOf(x *node, query []rune, d int, length int) int {
+	if x == nil {
+		return length
+	}
+	if x.value != nil {
+		length = d
+	}
+	if d == len(query) {
+		return length
+	}
+	c := query[d]
+	return longestPrefixOf(x.next[c], query, d + 1, length)
 }
 
 func (r *RadixTree) PrintStructure() {
