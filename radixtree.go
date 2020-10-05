@@ -1,3 +1,4 @@
+// package radixtree implements a generic mutable radix tree
 package radixtree
 
 import (
@@ -6,25 +7,25 @@ import (
 )
 
 type node struct {
-	value interface{}
-	next []*node
+	value interface{} // value of the node or nil if there is no value
+	next []*node // array of pointers to the next node
 }
 
 const R = 256
 
+// creates a new node structure, initializing the next array
 func createNode() *node {
 	n := node{next: make([]*node, R)}
 	return &n
 }
 
 type RadixTree struct {
-
 	root *node
 	n int
 }
 
 func (r *RadixTree) Get(key string) interface{} {
-	x := r.get(r.root, key, 0)
+	x := get(r.root, key, 0)
 	return x
 }
 
@@ -32,12 +33,12 @@ func (r *RadixTree) Contains(key string) bool {
 	return r.Get(key) != nil
 }
 
-func (r *RadixTree) get(x *node, key string, d int) *node {
+func get(x *node, key string, d int) *node {
 	if d == len(key) {
 		return x
 	}
 	c := key[d]
-	return r.get(x.next[c], key, d + 1)
+	return get(x.next[c], key, d + 1)
 }
 
 func (r *RadixTree) Put(key string, value interface{}) {
@@ -107,7 +108,7 @@ func (r *RadixTree) Keys() []string {
 
 func (r *RadixTree) KeysWithPrefix(prefix string) []string {
 	results := make([]string, 0)
-	x := r.get(r.root, prefix, 0)
+	x := get(r.root, prefix, 0)
 	b := []rune(prefix)
 	results = collect(x, b, results)
 	return results
