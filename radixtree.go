@@ -163,11 +163,12 @@ func collectPattern(x *node, prefix []rune, pattern []rune, results []string) []
 }
 
 func(r *RadixTree) LongestPrefixOf(query string) string {
-	length := longestPrefixOf(r.root, []rune(query), 0, -1)
+	q := []rune(query)
+	length := longestPrefixOf(r.root, q, 0, -1)
 	if length == -1 {
 		return ""
 	} else {
-		return "?"
+		return string(q[:length])
 	}
 }
 

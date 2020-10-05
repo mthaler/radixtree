@@ -34,6 +34,13 @@ func TestRadixTree_KeysThatMatch(t *testing.T) {
 	}
 }
 
+func TestRadixTree_LongestPrefixOf(t *testing.T) {
+	r := createTestTree()
+	if r.LongestPrefixOf("romulus1234") != "romulus" {
+		t.Error("r.LongestPrefixOf(romulus1234) should be romulus")
+	}
+}
+
 func createTestTree() RadixTree {
 	r := RadixTree{}
 	r.Put("romane", 1)
@@ -45,4 +52,3 @@ func createTestTree() RadixTree {
 	r.Put("rubicundus", 7)
 	return r
 }
-
