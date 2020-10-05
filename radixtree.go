@@ -78,6 +78,7 @@ func (r *RadixTree) IsEmpty() bool {
 	return r.Size() == 0
 }
 
+// Removes the key from the radix tree if the key is present.
 func (r *RadixTree) Delete(key string) {
 	r.root = r.delete(r.root, key, 0)
 }
@@ -113,6 +114,7 @@ func (r *RadixTree) Keys() []string {
 	return r.KeysWithPrefix("")
 }
 
+// Returns all keys of the radix tree that start with the given prefix.
 func (r *RadixTree) KeysWithPrefix(prefix string) []string {
 	results := make([]string, 0)
 	x := get(r.root, prefix, 0)
@@ -136,6 +138,8 @@ func collect(x *node, prefix []rune, results []string) []string {
 	return results
 }
 
+// Returns all of the keys of the radix tree that match the given pattern,
+// where . symbol is treated as wildcard character that matches any single character.
 func (r *RadixTree) KeysThatMatch(pattern string) []string {
 	results := make([]string, 0)
 
@@ -170,6 +174,7 @@ func collectPattern(x *node, prefix []rune, pattern []rune, results []string) []
 	return results
 }
 
+// Returns the string in the symbol table that is the longest prefix of the given query.
 func (r *RadixTree) LongestPrefixOf(query string) string {
 	q := []rune(query)
 	length := longestPrefixOf(r.root, q, 0, -1)
@@ -194,6 +199,7 @@ func longestPrefixOf(x *node, query []rune, d int, length int) int {
 	return longestPrefixOf(x.next[c], query, d+1, length)
 }
 
+// Prints the structure of the radix tree
 func (r *RadixTree) PrintStructure() {
 	var b strings.Builder
 	printStructure(r.root, 0, &b)
